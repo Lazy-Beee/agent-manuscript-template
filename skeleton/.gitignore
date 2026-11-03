@@ -1,0 +1,38 @@
+# This repo versions the manuscript TEXT (.md) + scripts (.py, .ps1) only.
+# Heavy/derived binaries are intentionally untracked (lean policy) to keep history
+# small and diffs meaningful. Regenerate
+# figures/data from the scripts, or `git add -f <file>` to force-track a specific
+# binary or frozen data file if it must be kept.
+
+# Python
+__pycache__/
+*.pyc
+
+# Office / PDF / image binaries (Word drafts, slides, manuscript figures)
+*.docx
+# ... except the render's reference document: the one docx the repository needs, so a
+# clone can render the draft without a force-add
+!.claude/skills/manuscript-to-docx/assets/reference.docx
+*.pptx
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+
+# Frozen / derived numerical data (regenerable by the figure pipeline)
+*.npz
+*.csv
+
+# Extracted PDF text layers (derived from the gitignored reference PDFs)
+references/extracted_text/
+
+# Citation-audit working files (usage packs and batch results; regenerable)
+references/audit_work/
+
+# Retired files
+_trash/
+
+# Frozen history (read-only, see README)
+archive/

@@ -1,0 +1,15 @@
+# Consistent line endings: store and check out tracked text as LF on every platform.
+# Avoids the Windows "LF will be replaced by CRLF" warnings and keeps diffs noise-free.
+* text=auto eol=lf
+
+# Explicit for the text types this repo tracks.
+*.md  text eol=lf
+*.py  text eol=lf
+*.txt text eol=lf
+
+# Never apply text/EOL conversion if one of these is ever force-added past .gitignore.
+*.png  binary
+*.pdf  binary
+*.docx binary
+*.pptx binary
+*.npz  binary

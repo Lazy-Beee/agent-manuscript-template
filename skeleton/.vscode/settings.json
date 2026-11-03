@@ -1,0 +1,17 @@
+{
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "diffEditor.wordWrap": "on",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "markdown.math.enabled": true,
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/__pycache__": true
+  }
+}
