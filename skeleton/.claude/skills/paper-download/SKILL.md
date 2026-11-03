@@ -36,6 +36,16 @@ then names and files it like the others.
 - **Rate.** One request at a time with a pause between requests (the scripts' defaults). The
   metadata APIs get `--mailto` when the user gives an address; leave it out rather than
   inventing one.
+- **One download run per machine.** The servers see one machine and one network, so the limit
+  is per machine, not per session. `fetch_oa_pdfs.py` goes through `scripts/fetch_gate.py`, a
+  machine-wide lease with a log of fetch slots (state in `%LOCALAPPDATA%\paper-download\`,
+  `~/.local/state/paper-download/` elsewhere, or the `PAPER_DOWNLOAD_STATE` folder). When the
+  script answers `BUSY` (exit code 3), another session is downloading: tell the user who it is
+  and how far it got, run `python -I scripts/fetch_gate.py wait` in the background (it exits
+  when the lease is free, after at most 3 h, without taking it), then run the fetch again.
+  Never fetch around the gate. `fetch_gate.py status` shows the lease and the last log lines;
+  `fetch_gate.py clear --run` removes a lease whoever holds it and is run only on the user's
+  word.
 - **Downloading needs the user's go.** The request to download the list is that go; say what
   will be fetched (the priority, the count, the destination) before starting, and report what
   landed and what did not.
@@ -82,6 +92,12 @@ with an HTML page or 403 even for open-access papers, so some open papers join t
 on the list the script prints at the end: the entries left for the user, with their doi.org
 links and the reason.
 
+The script first opens a run on the fetch gate. `GO` (after `TOOK-OVER` when it took over the
+lease of a session that has exited or fell silent) means it fetches; `BUSY` means it requested
+nothing (see the rule above). A `WARN` about PDFs in Downloads means files arrived there while
+no gated run was open: another session fetching without the gate, or the user saving by hand;
+tell the user. The run ends when the script exits (`ENDED`).
+
 ### 4. Papers the user gets
 
 Give the user that list grouped by priority. They open each paper through their library's
@@ -111,5 +127,5 @@ nothing binary).
 
 Say, in the language of the conversation: how many files landed per priority and where,
 which entries are left for the user (closed, no PDF URL, or a page served instead of the PDF),
-which files the collector left unmatched, and that the PDFs are gitignored and the list is
-ticked.
+which files the collector left unmatched, any `BUSY`, `TOOK-OVER` or `WARN` line the gate
+printed, and that the PDFs are gitignored and the list is ticked.
